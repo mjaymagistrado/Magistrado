@@ -1,37 +1,30 @@
-
 const pool = require('../config/database');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const register = async (req, res) => {
-    const { fullname, username, passwordx } = req.body;
-
+    const { fullname, username, passwordx} = req.body;
+  
     try {
-        // Check if the username already exists
-        const [existingUser] = await pool.query('SELECT * FROM users WHERE username = ?', [username]); // Adjust if necessary
-
-        if (existingUser.length > 0) {
-            return res.status(400).json({ message: 'Existing username has been registered, try another username' });
-        }
-
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(passwordx, 10);
-
-        // Insert new user into the database
-        const [rows] = await pool.query(
+      const hashedPassword = await bcrypt.hash(passwordx, 10);
+  
+  
+      const [rows] = await pool.query(
         'INSERT INTO users (fullname, username, passwordx) VALUES (?, ?, ?)',
         [fullname, username, hashedPassword]
       );
+  
+      res.status(201).json({ message: 'User registered successfully!' });
     } catch (err) {
-        res.status(500).json({ error: err.message });
+      res.status(500).json({ error: err.message });
     }
-};
+  };
 
 const login = async (req, res) => {
     const { username, passwordx } = req.body;
 
     try {
-        const [rows] = await pool.query('SELECT * FROM users WHERE username = ?', [username]);
+        const [rows] = await pool.query('SELECT * FROM users WHERE username = ?', [username, passwordx]);
 
         if (rows.length === 0) {
             return res.status(400).json({ error: 'Invalid Useranme' });
