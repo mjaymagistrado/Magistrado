@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAllDepartment, getDeptByid, createDepartment, updateDepartment, deleteDepartment } = require('../controllers/departmentController');
+const { getAllDepartment, getDeptByid, createDepartment, updateDepartment, deleteDepartment } = require('../controllers/deptController');
 
 const router = express.Router();
 
